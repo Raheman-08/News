@@ -4,6 +4,7 @@ import useSWR from 'swr';
 import SwipeControl from '../components/SwipeControl';
 import * as Animatable from 'react-native-animatable';
 
+// Function to fetch data from API
 const fetcher = async url => {
   const response = await fetch(url);
   if (!response.ok) {
@@ -12,37 +13,47 @@ const fetcher = async url => {
   return response.json();
 };
 
+// Main component
 const Homescreen = () => {
+  // State variables
+  const [randomArticle, setRandomArticle] = useState(null);
+  const [animateCard, setAnimateCard] = useState(false);
+
+  // Fetching data using useSWR hook
   const { data, error, mutate } = useSWR(
     'https://newsapi.org/v2/top-headlines?country=us&apiKey=195dd350be484a4cbcd39f56b11b6f97',
     fetcher,
   );
 
-  const [randomArticle, setRandomArticle] = useState(null);
-  const [animateCard, setAnimateCard] = useState(false);
-
+  // Effect hook to trigger animation when new data is fetched
   useEffect(() => {
     if (data) {
-      setAnimateCard(true); // Trigger animation when new data is received
+      setAnimateCard(true);
     }
   }, [data]);
 
-  if (error)
+  // Error handling
+  if (error) {
     return (
       <SafeAreaView>
         <Text>Error: {error.message}</Text>
       </SafeAreaView>
     );
-  if (!data)
+  }
+  // Loading state
+  if (!data) {
     return (
       <SafeAreaView>
         <Text>Loading...</Text>
       </SafeAreaView>
     );
+  }
 
+  // Destructuring data
   const { articles } = data;
   const latestArticle = articles[0];
 
+  // Function to handle swipe action
   const handleSwipe = async () => {
     try {
       await mutate();
@@ -54,21 +65,24 @@ const Homescreen = () => {
   };
 
   // Function to format date as "10 Jan 2024"
-  const formatDate = (dateString) => {
+  const formatDate = dateString => {
     const options = { day: '2-digit', month: 'short', year: 'numeric' };
     return new Date(dateString).toLocaleDateString('en-GB', options);
   };
 
+  // JSX rendering
   return (
     <SafeAreaView style={styles.container}>
-      <Animatable.View animation={animateCard ? "fadeInUp" : null} duration={1000} style={styles.newsContainer}>
+      <Animatable.View animation={animateCard ? 'fadeInUp' : null} duration={1000} style={styles.newsContainer}>
         <Image
           style={styles.image}
           source={{ uri: randomArticle ? randomArticle.urlToImage : latestArticle.urlToImage }}
         />
         <View style={styles.overlay}>
           <Text style={styles.title}>{randomArticle ? randomArticle.title : latestArticle.title}</Text>
-          <Text style={styles.date}>{randomArticle ? formatDate(randomArticle.publishedAt) : formatDate(latestArticle.publishedAt)}</Text>
+          <Text style={styles.date}>
+            {randomArticle ? formatDate(randomArticle.publishedAt) : formatDate(latestArticle.publishedAt)}
+          </Text>
         </View>
       </Animatable.View>
       <View style={styles.bottomContainer}>
@@ -78,6 +92,7 @@ const Homescreen = () => {
   );
 };
 
+// Styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,

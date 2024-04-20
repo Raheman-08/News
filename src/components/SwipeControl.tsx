@@ -1,10 +1,18 @@
 import React, { useRef } from 'react';
 import { View, Text, StyleSheet, Animated, PanResponder, Dimensions } from 'react-native';
 
+/**
+ * SwipeControl Component
+ * @param {function} onSwipe - Callback function triggered when swipe action is performed
+ * @param {object} newsData - Data containing news information
+ */
 const SwipeControl = ({ onSwipe, newsData }) => {
+  // Ref for the pan gesture
   const pan = useRef(new Animated.Value(0)).current;
+  // Get the width of the screen
   const containerWidth = Dimensions.get('window').width - 32;
 
+  // PanResponder for handling touch events
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
@@ -30,6 +38,7 @@ const SwipeControl = ({ onSwipe, newsData }) => {
     }),
   ).current;
 
+  // JSX rendering
   return (
     <View style={styles.bgContainer}>
       <Animated.View
@@ -46,6 +55,7 @@ const SwipeControl = ({ onSwipe, newsData }) => {
   );
 };
 
+// Styles
 const styles = StyleSheet.create({
   bgContainer: {
     backgroundColor: '#000',

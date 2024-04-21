@@ -10,11 +10,13 @@
     "test": "jest"
   },
   "dependencies": {
+    "@react-native-masked-view/masked-view": "^0.3.1",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.9.26",
     "react": "18.2.0",
     "react-native": "0.73.7",
     "react-native-animatable": "^1.4.0",
+    "react-native-linear-gradient": "^2.8.3",
     "swr": "^2.2.5"
   },
   "devDependencies": {
